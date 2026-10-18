@@ -111,7 +111,7 @@ Irodori 是单说话人日语语料训练的，喂英文只会得到"日语口�
 ## 快速开始
 
 ```bash
-git clone https://github.com/<you>/saycheck
+git clone https://github.com/l2ktech/saycheck
 cd saycheck
 python3 -m http.server 8000
 ```

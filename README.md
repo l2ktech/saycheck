@@ -154,7 +154,7 @@ a human saying the phrase. The harness only needs files it can play.
 ## Quick start
 
 ```bash
-git clone https://github.com/<you>/saycheck
+git clone https://github.com/l2ktech/saycheck
 cd saycheck
 python3 -m http.server 8000
 ```

@@ -45,20 +45,8 @@ jobs:
           python3 scripts/validate.py suite examples/saycheck-ja-45.suite.json
           python3 scripts/validate.py session examples/sample.session.json
 
-      - name: Guard — referenced audio must exist
-        run: |
-          python3 - <<'PY'
-          import json, pathlib, sys
-          suite_path = pathlib.Path("examples/saycheck-ja-45.suite.json")
-          suite = json.loads(suite_path.read_text(encoding="utf-8"))
-          base = suite_path.parent / (suite.get("audioBase") or "")
-          missing = [u["audio"]["path"] for u in suite["utterances"]
-                     if u.get("audio") and not (base / u["audio"]["path"]).exists()]
-          if missing:
-              print("::error::missing audio:", *missing, sep="\n  ")
-              sys.exit(1)
-          print(f"all {sum(1 for u in suite['utterances'] if u.get('audio'))} audio files present")
-          PY
+      - name: Guard — referenced audio must exist and match its checksum
+        run: python3 scripts/check_audio.py examples/*.suite.json
 
       - name: Strip git metadata before upload
         run: rm -rf .git
