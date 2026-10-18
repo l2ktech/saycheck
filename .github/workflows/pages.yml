@@ -7,11 +7,6 @@ name: Deploy to Pages
 on:
   push:
     branches: [main]
-    paths:
-      - "web/**"
-      - "examples/**"
-      - "index.html"
-      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
