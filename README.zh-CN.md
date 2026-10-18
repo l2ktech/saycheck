@@ -200,6 +200,23 @@ docs/       设计说明
 
 ---
 
+## 测试
+
+两套零依赖测试，每次 push 都在 CI 里跑：
+
+```bash
+python3 -m unittest discover -s tests -p 'test_*.py' -v   # 18 个：校验器、校验和、自带示例
+node --test tests/*.test.mjs                              # 11 个：成功率算法、CSV 转义
+```
+
+Node 那套专门盯住「一旦漂移就会悄悄毁掉报告」的规则：`inconclusive` 永远不算失败、
+人工判定优先于传感器、一致率只在两者都存在时才计算。
+
+Python 那套通过 `subprocess` 打真实 CLI——一个只会输出 OK 的校验器，
+和 `cat` 没有区别。
+
+---
+
 ## 许可
 
 MIT。示例音频由 Irodori-TTS（MIT）生成。

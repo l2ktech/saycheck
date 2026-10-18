@@ -247,6 +247,24 @@ that stores your recordings.
 
 ---
 
+## Tests
+
+Two dependency-free suites, both run in CI on every push:
+
+```bash
+python3 -m unittest discover -s tests -p 'test_*.py' -v   # 18 tests: validators, checksums, bundled examples
+node --test tests/*.test.mjs                              # 11 tests: pass-rate maths, CSV escaping
+```
+
+The Node suite pins the rules that quietly ruin a report if they drift:
+`inconclusive` never counts as a failure, the human verdict overrides the
+sensor's, and agreement is only computed where both exist.
+
+The Python suite exercises the real CLIs through `subprocess` — a validator that
+only ever prints OK is indistinguishable from `cat`.
+
+---
+
 ## Licence
 
 MIT. Example audio generated with Irodori-TTS (MIT).
