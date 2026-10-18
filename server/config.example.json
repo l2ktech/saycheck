@@ -1,0 +1,48 @@
+{
+  "_comment": "Copy to server/config.json and edit. Relative paths resolve from where you run app.py.",
+
+  "listen": "127.0.0.1",
+  "port": 8000,
+
+  "_token_comment": "Leave empty for local use. Set it when exposing the port; New API should send it as a Bearer token.",
+  "token": "",
+
+  "_concurrency_comment": "One GPU, one job. Raise only after measuring.",
+  "maxConcurrency": 1,
+  "defaultProvider": "irodori",
+
+  "cache": {
+    "enabled": true,
+    "dir": "cache",
+    "maxEntries": 2000
+  },
+
+  "providers": [
+    {
+      "_note": "Irodori via its own server. Any process that speaks POST /v1/audio/speech works here.",
+      "name": "irodori",
+      "type": "http",
+      "baseUrl": "http://127.0.0.1:8765",
+      "upstreamModel": "irodori",
+      "languages": ["ja"],
+      "timeout": 120
+    },
+    {
+      "_note": "Chatterbox-TTS-Server exposes an OpenAI-compatible endpoint on 8004 by default.",
+      "name": "chatterbox",
+      "type": "http",
+      "baseUrl": "http://127.0.0.1:8004",
+      "upstreamModel": "chatterbox",
+      "languages": ["ja", "en", "zh", "ko"],
+      "timeout": 180
+    },
+    {
+      "_note": "A command provider: JSON on stdin, audio on stdout. Works for any script you can write. Cold-starts each call, so keep it for small models.",
+      "name": "silence",
+      "type": "command",
+      "command": ["python3", "providers/silence.py"],
+      "languages": ["*"],
+      "timeout": 30
+    }
+  ]
+}

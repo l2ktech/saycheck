@@ -1,0 +1,19 @@
+{
+  "_comment": "Copy this to a name that ends with .map.json and keep it OUT of the repository. It contains the substitutions that remove customer names before publishing a suite.",
+  "replacements": [
+    {
+      "from": "ACME_CORP",
+      "to": "our company",
+      "fields": ["text", "translation"]
+    },
+    {
+      "from": "CITY_A",
+      "to": "domestic",
+      "fields": ["text", "translation"]
+    }
+  ],
+  "groups": {
+    "source-group-id-1": { "name": "Greeting", "scene": "Opening / ask the robot to start" },
+    "source-group-id-2": { "name": "Self introduction", "scene": "Ask what kind of organisation this is" }
+  }
+}

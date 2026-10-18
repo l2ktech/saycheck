@@ -1,0 +1,898 @@
+{
+  "schemaVersion": "1.0",
+  "id": "saycheck-ja-basic",
+  "title": "Japanese voice commands for a service robot (45 utterances)",
+  "description": "Voice commands used to test wake-word and intent recognition on a service robot. Text is anonymized; linguistic features (mora count, keigo, loanwords) are preserved so results remain comparable.",
+  "locale": "ja-JP",
+  "license": "CC-BY-4.0",
+  "audioBase": "",
+  "groups": [
+    {
+      "id": "g1",
+      "name": "问候与引导",
+      "scene": "开场：请机器人开始带参或导览"
+    },
+    {
+      "id": "g2",
+      "name": "自我介绍",
+      "scene": "询问对方是什么样的组织"
+    },
+    {
+      "id": "g3",
+      "name": "团队介绍",
+      "scene": "询问部门或团队的工作内容"
+    },
+    {
+      "id": "g4",
+      "name": "案例介绍",
+      "scene": "询问一个落地案例"
+    },
+    {
+      "id": "g5",
+      "name": "握手",
+      "scene": "用户主动请求握手"
+    },
+    {
+      "id": "g6",
+      "name": "道谢应答",
+      "scene": "用户向机器人道谢"
+    }
+  ],
+  "defaults": {
+    "rounds": 5,
+    "gapMs": 1500,
+    "windowMs": 5000,
+    "settleMs": 900,
+    "silenceMs": 1000,
+    "rmsPeakDb": -34,
+    "frameDiff": 3,
+    "rule": "any",
+    "recordFailedOnly": true
+  },
+  "utterances": [
+    {
+      "id": "g1-01",
+      "groupId": "g1",
+      "text": "お願いします",
+      "translation": "拜托了",
+      "tags": [
+        "mora:short",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-01.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "06b9e1a3086316a3a6de126b8aef01e2b4850e1cd64b314bdeed7d7982b1afcd"
+      }
+    },
+    {
+      "id": "g1-02",
+      "groupId": "g1",
+      "text": "ガイドしてください",
+      "translation": "请做导览",
+      "tags": [
+        "mora:short",
+        "loanword",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-02.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "5b1a769421aef024c60c90bf9f1c002948d4a15773e19fe6f8dbf3a3147a5100"
+      }
+    },
+    {
+      "id": "g1-03",
+      "groupId": "g1",
+      "text": "紹介してください",
+      "translation": "请介绍一下",
+      "tags": [
+        "mora:short",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-03.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "635fbd769a73b44dfaf03f2aec146bd3d83edb1a8b33fa7f44b2baedd092535f"
+      }
+    },
+    {
+      "id": "g1-04",
+      "groupId": "g1",
+      "text": "説明してください",
+      "translation": "请说明一下",
+      "tags": [
+        "mora:short",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-04.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "0edf6d5de6d1b806b623d17e94fa08426ed109d7dca54f739e2cab4b5f1f4681"
+      }
+    },
+    {
+      "id": "g1-05",
+      "groupId": "g1",
+      "text": "説明をお願いします",
+      "translation": "麻烦说明一下",
+      "tags": [
+        "mora:mid",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-05.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "c03f74e36d5fe01f91cc19444b803d67c68f52178ed8dd463c8f7a3c29996561"
+      }
+    },
+    {
+      "id": "g1-06",
+      "groupId": "g1",
+      "text": "見学の案内をお願いします",
+      "translation": "麻烦带我参观一下",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-06.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "da2fc3ec1d6ffe1356604de15400e4bad44063d2296b560a74a790befe1f84dd"
+      }
+    },
+    {
+      "id": "g1-07",
+      "groupId": "g1",
+      "text": "見学について説明してください",
+      "translation": "请说明一下参观的事",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-07.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "bf747a079dde79c3e839a635ae4c136bce1f4762f9886042d34c4d76e8cac435"
+      }
+    },
+    {
+      "id": "g1-08",
+      "groupId": "g1",
+      "text": "見学の流れを教えてください",
+      "translation": "请讲讲参观流程",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-08.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "00a468a89e8981e577ef5e855d4114c18f225d0137f094e8141f225698185047"
+      }
+    },
+    {
+      "id": "g1-09",
+      "groupId": "g1",
+      "text": "見学コースを紹介してください",
+      "translation": "请介绍一下参观路线",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "loanword",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-09.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "ecfd217d180c4d45fb2ed34ffd13c491cefc1a3af146a95c0f963520d0361645"
+      }
+    },
+    {
+      "id": "g1-10",
+      "groupId": "g1",
+      "text": "館内の案内をお願いします",
+      "translation": "请带我参观馆内",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g1-10.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "5d3c09201764f33d6710067412c40f3f85d3d310587e24bb0658b82337987fed"
+      }
+    },
+    {
+      "id": "g2-01",
+      "groupId": "g2",
+      "text": "会社のことを教えてください",
+      "translation": "请讲讲公司的事",
+      "tags": [
+        "mora:mid",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g2-01.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "a4a6e1dbe2aff9094be63a603eb1309862d109b48889b65ee50c9a3aaf8a53b9"
+      }
+    },
+    {
+      "id": "g2-02",
+      "groupId": "g2",
+      "text": "御社について説明してください",
+      "translation": "请说明一下贵公司",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g2-02.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "db98ab60779239784692dd951a36b7e1d03e610bed8eeb215823748583d53d75"
+      }
+    },
+    {
+      "id": "g2-03",
+      "groupId": "g2",
+      "text": "どんな会社なのか教えてください",
+      "translation": "请讲讲是什么样的公司",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g2-03.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "6248037d58e7ce531455051b68b2affac29f012951632a287e095c2e8a3384ec"
+      }
+    },
+    {
+      "id": "g2-04",
+      "groupId": "g2",
+      "text": "会社の紹介をお願いします",
+      "translation": "麻烦介绍一下公司",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g2-04.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "5b587433f59698008ce1dacb5497ed343f17352dbc807ecffc38a623a821551d"
+      }
+    },
+    {
+      "id": "g2-05",
+      "groupId": "g2",
+      "text": "会社について説明してください",
+      "translation": "请说明一下公司",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g2-05.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "b84c9bc515a7a033ce7e3bdf57a3993577039c160db761f91e62120d9c9bd9b4"
+      }
+    },
+    {
+      "id": "g3-01",
+      "groupId": "g3",
+      "text": "ロボット部門の紹介をお願いします",
+      "translation": "麻烦介绍一下机器人部门",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "loanword",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g3-01.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "49c32e7400ed2bf16cefc4dfb01e32ca844cd26943ab6bc0695ef39d7f891642"
+      }
+    },
+    {
+      "id": "g3-02",
+      "groupId": "g3",
+      "text": "ロボットの開発について教えてください",
+      "translation": "请讲讲机器人的开发",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "loanword",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g3-02.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "89f19b4e72f696c28ce1f4524514556cd2504fa895680f457b36126929d64301"
+      }
+    },
+    {
+      "id": "g3-03",
+      "groupId": "g3",
+      "text": "ロボットの仕事を紹介してください",
+      "translation": "请介绍一下机器人的工作",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "loanword",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g3-03.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "1f09589de49163ae5150a328017fb6e6850a6c6ffde2c09394223fe32f56fc0e"
+      }
+    },
+    {
+      "id": "g3-04",
+      "groupId": "g3",
+      "text": "ロボット部門について説明してください",
+      "translation": "请说明一下机器人部门",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "loanword",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g3-04.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "1529e1f314ddb4deb6b2916cf254215455e8f4d23baf5a664ea437b82693511a"
+      }
+    },
+    {
+      "id": "g3-05",
+      "groupId": "g3",
+      "text": "チームの仕事について教えてください",
+      "translation": "请讲讲团队的工作",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "loanword",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g3-05.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "7627a6fd9ce37b3585bed5dcbc88ef23cf9103237e8c551979adfcd1decb62a4"
+      }
+    },
+    {
+      "id": "g3-06",
+      "groupId": "g3",
+      "text": "ロボットの仕事は何ですか",
+      "translation": "机器人的工作是什么",
+      "tags": [
+        "mora:mid",
+        "kanji",
+        "loanword",
+        "keigo",
+        "question"
+      ],
+      "audio": {
+        "path": "audio/g3-06.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "46e0f26e54b8e974bc4382c073c79b598706a1d2af725001ea142a3bd61b16b4"
+      }
+    },
+    {
+      "id": "g4-01",
+      "groupId": "g4",
+      "text": "工場での事例を教えてください",
+      "translation": "请讲讲工厂里的案例",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g4-01.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "ae15eed488ad144857f9140b14859834dcbeee040dd1a9b8eefd73ba39df77c4"
+      }
+    },
+    {
+      "id": "g4-02",
+      "groupId": "g4",
+      "text": "工場の取り組みについて教えてください",
+      "translation": "请讲讲工厂的举措",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g4-02.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "277d1b20ef490089231c67fa3ada216ebc03174a5fb52e3632fab380a3fb50cb"
+      }
+    },
+    {
+      "id": "g4-03",
+      "groupId": "g4",
+      "text": "工場での仕事について教えてください",
+      "translation": "请讲讲工厂里的工作",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g4-03.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "b49ba1da3c5946311b96847f0c65094490502fcd05f82fb1918e616482ed572f"
+      }
+    },
+    {
+      "id": "g4-04",
+      "groupId": "g4",
+      "text": "現場での活用について教えてください",
+      "translation": "请讲讲在现场的应用",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g4-04.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "692d31c4cd49111a3abe1ffbf235e91afcc270a073d3372b522029f38e74bc99"
+      }
+    },
+    {
+      "id": "g4-05",
+      "groupId": "g4",
+      "text": "工場の事例を紹介してください",
+      "translation": "请介绍一下工厂的案例",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g4-05.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "3ba6694ed8c4b831cd6940c5517ab13de7aaca72e8c619eb8541a664ebabb6b5"
+      }
+    },
+    {
+      "id": "g4-06",
+      "groupId": "g4",
+      "text": "実際の工場の例を教えてください",
+      "translation": "请讲讲真实工厂的例子",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g4-06.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "d73b445ed3418de511db42c54caf2e8115e9c6dbd204133738c2c0c51c9b2138"
+      }
+    },
+    {
+      "id": "g5-01",
+      "groupId": "g5",
+      "text": "はじめまして握手をお願いします",
+      "translation": "初次见面，请握个手",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-01.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "b56690fe77746be28d86e5ccb8ac33227da1af780e3aa535c0a21e2683df1652"
+      }
+    },
+    {
+      "id": "g5-02",
+      "groupId": "g5",
+      "text": "ぜひ握手をお願いします",
+      "translation": "请务必握个手",
+      "tags": [
+        "mora:mid",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-02.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "32acb595ba806b6a01ddc0bceffc2005eedddb1f8d92b2a69aa65e59a135ccba"
+      }
+    },
+    {
+      "id": "g5-03",
+      "groupId": "g5",
+      "text": "ここで握手をお願いします",
+      "translation": "请在这里握个手",
+      "tags": [
+        "mora:mid",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-03.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "c7fc9fc9bfe3b61bf05c61eec0fd18093ab8ebedde1354c0491b2fd3cf1906cb"
+      }
+    },
+    {
+      "id": "g5-04",
+      "groupId": "g5",
+      "text": "記念に握手をお願いします",
+      "translation": "作为纪念，请握个手",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-04.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "67845c9453b1f20c8d539540199539630ca9402f80598fef36e81485f372c61f"
+      }
+    },
+    {
+      "id": "g5-05",
+      "groupId": "g5",
+      "text": "ぜひ一度握手をお願いします",
+      "translation": "请务必握一次手",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "number",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-05.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "5ab5be29ac7fdd4461e405022d7fa749b7a0664dc0d42e70196b07495e534443"
+      }
+    },
+    {
+      "id": "g5-06",
+      "groupId": "g5",
+      "text": "あらためて握手をお願いします",
+      "translation": "请再正式握个手",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-06.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "14c2b48751121ab0dc74e4d457d128ce9f631be9732c455c4c85e04aa283a9d8"
+      }
+    },
+    {
+      "id": "g5-07",
+      "groupId": "g5",
+      "text": "みんなで握手をお願いします",
+      "translation": "大家一起握个手",
+      "tags": [
+        "mora:mid",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-07.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "600762157128922e61b7c782b41d042434731cccd1cc5d90f94fa7a0c31f53d4"
+      }
+    },
+    {
+      "id": "g5-08",
+      "groupId": "g5",
+      "text": "先生と握手をお願いします",
+      "translation": "请和老师握手",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-08.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "61370a92fdbadfb04db13bae568beebf1ba167255b571181159930b14563d145"
+      }
+    },
+    {
+      "id": "g5-09",
+      "groupId": "g5",
+      "text": "学生と握手をお願いします",
+      "translation": "请和学生握手",
+      "tags": [
+        "mora:long",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-09.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "2315630362505eb44020f807160030e5da43da0d60a0b7a32bef962fd28e0f6c"
+      }
+    },
+    {
+      "id": "g5-10",
+      "groupId": "g5",
+      "text": "これから握手をお願いします",
+      "translation": "接下来握个手吧",
+      "tags": [
+        "mora:mid",
+        "kanji",
+        "keigo",
+        "request"
+      ],
+      "audio": {
+        "path": "audio/g5-10.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "a979bf5ebf0f83305dce0451e4e7189b22c11ca3f41cc489a795d42898281473"
+      }
+    },
+    {
+      "id": "g6-01",
+      "groupId": "g6",
+      "text": "ありがとうございます",
+      "translation": "谢谢（礼貌）",
+      "tags": [
+        "mora:short",
+        "keigo"
+      ],
+      "audio": {
+        "path": "audio/g6-01.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "ff0b782836f3ff5045d43659359b379786ee30a9205f85f74c9ab8352d5edc04"
+      }
+    },
+    {
+      "id": "g6-02",
+      "groupId": "g6",
+      "text": "ありがとうございました",
+      "translation": "谢谢（过去式）",
+      "tags": [
+        "mora:mid"
+      ],
+      "audio": {
+        "path": "audio/g6-02.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "fad7fdf12c4bf5c1b2bad0dbd45db8a0a0ca0f33c6ea4d56ac17683a8b534608"
+      }
+    },
+    {
+      "id": "g6-03",
+      "groupId": "g6",
+      "text": "どうもありがとう",
+      "translation": "多谢",
+      "tags": [
+        "mora:short"
+      ],
+      "audio": {
+        "path": "audio/g6-03.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "cc88737abfddf8fee4024a4b667cc413635bff5bb3a08d1a2451c226dacc1106"
+      }
+    },
+    {
+      "id": "g6-04",
+      "groupId": "g6",
+      "text": "どうもありがとうございます",
+      "translation": "多谢（礼貌）",
+      "tags": [
+        "mora:mid",
+        "keigo"
+      ],
+      "audio": {
+        "path": "audio/g6-04.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "132042ca85e420b9113110323ca5ff91ae4213fe1d4f2615f7f10798862bb21d"
+      }
+    },
+    {
+      "id": "g6-05",
+      "groupId": "g6",
+      "text": "とても助かりました",
+      "translation": "帮了大忙",
+      "tags": [
+        "mora:short",
+        "kanji"
+      ],
+      "audio": {
+        "path": "audio/g6-05.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "a976955a60a2bb0a81495e14831bbbc21b680c42ab5fc808e6763c80b3b03309"
+      }
+    },
+    {
+      "id": "g6-06",
+      "groupId": "g6",
+      "text": "本当にありがとう",
+      "translation": "真的谢谢",
+      "tags": [
+        "mora:short",
+        "kanji"
+      ],
+      "audio": {
+        "path": "audio/g6-06.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "1de1a4317957b39a85c7da7595a2cde35582a4198e282af2a421e1b3da5adf10"
+      }
+    },
+    {
+      "id": "g6-07",
+      "groupId": "g6",
+      "text": "ありがとうございますね",
+      "translation": "谢谢您",
+      "tags": [
+        "mora:mid",
+        "keigo"
+      ],
+      "audio": {
+        "path": "audio/g6-07.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "91f4ab80c4a2532401e841c2e30edc9b45f5ae3d9d322ca9f5c88c97c41405ef"
+      }
+    },
+    {
+      "id": "g6-08",
+      "groupId": "g6",
+      "text": "どうもありがとうございました",
+      "translation": "非常感谢（礼貌过去）",
+      "tags": [
+        "mora:mid"
+      ],
+      "audio": {
+        "path": "audio/g6-08.wav",
+        "provider": "irodori",
+        "model": "v4.1-small-mf-8bit",
+        "languageId": "ja-JP",
+        "sha256": "0f20361e2f48eda6df86d7b9ac0e8e58a81bdad664630b4cb882781397d50ad9"
+      }
+    }
+  ]
+}

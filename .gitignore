@@ -1,0 +1,38 @@
+# macOS / editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node (only if someone adds tooling)
+node_modules/
+package-lock.json
+
+# Local state: never commit a real test run or a real recording
+outputs/
+recordings/
+*.session.local.json
+
+# Anonymization maps contain customer names. They must never enter the repo.
+# Only the example template is tracked.
+*.map.json
+!*.map.example.json
+
+# Model weights are never committed
+models/
+*.safetensors
+*.onnx
+
+# TTS proxy: real config may hold API keys, the cache is a build artifact
+server/config.json
+server/cache/
+cache/
+
+# Logs
+*.log

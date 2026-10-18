@@ -1,0 +1,192 @@
+{
+  "schemaVersion": "1.0",
+  "suiteId": "saycheck-ja-basic",
+  "suiteHash": "b404d8a29ae57e8260792e732fe0c17430d75394266c8c1552005e2661ec17a8",
+  "sessionId": "2026-10-18T19:20:00+08:00",
+  "startedAt": "2026-10-18T19:20:00+08:00",
+  "endedAt": "2026-10-18T19:24:37+08:00",
+  "operator": "demo",
+  "device": {
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "platform": "macOS",
+    "mic": "MacBook Pro Microphone",
+    "camera": "FaceTime HD Camera",
+    "screen": "1512x982@2x"
+  },
+  "thresholds": {
+    "rmsBaselineDb": -62.0,
+    "rmsPeakDb": -34.0,
+    "frameDiff": 3.0,
+    "windowMs": 5000,
+    "settleMs": 900,
+    "silenceMs": 1000,
+    "rule": "any"
+  },
+  "environment": {
+    "noiseFloorDb": -61.4,
+    "lightLevel": 118,
+    "note": "Quiet office, phone propped 60cm in front of the robot"
+  },
+  "trials": [
+    {
+      "utteranceId": "g1-01",
+      "round": 1,
+      "startedAt": "2026-10-18T19:20:04+08:00",
+      "metrics": {
+        "peakRmsDb": -31.2,
+        "baselineRmsDb": -61.8,
+        "frameDiff": 2.1,
+        "latencyMs": 820
+      },
+      "sensorVerdict": "pass",
+      "sensorReason": "peak -31.2 dB above -38 threshold",
+      "humanVerdict": "pass",
+      "agreement": true
+    },
+    {
+      "utteranceId": "g1-01",
+      "round": 2,
+      "startedAt": "2026-10-18T19:20:09+08:00",
+      "metrics": {
+        "peakRmsDb": -30.4,
+        "baselineRmsDb": -61.6,
+        "frameDiff": 1.8,
+        "latencyMs": 760
+      },
+      "sensorVerdict": "pass",
+      "sensorReason": "peak -30.4 dB above -38 threshold",
+      "humanVerdict": "pass",
+      "agreement": true
+    },
+    {
+      "utteranceId": "g1-01",
+      "round": 3,
+      "startedAt": "2026-10-18T19:20:14+08:00",
+      "metrics": {
+        "peakRmsDb": -52.9,
+        "baselineRmsDb": -61.9,
+        "frameDiff": 1.4
+      },
+      "sensorVerdict": "fail",
+      "sensorReason": "peak -52.9 dB below -38 threshold",
+      "humanVerdict": "fail",
+      "humanNote": "ignored, kept waiting",
+      "agreement": true,
+      "recording": "g1-01-r3"
+    },
+    {
+      "utteranceId": "g1-01",
+      "round": 4,
+      "startedAt": "2026-10-18T19:20:19+08:00",
+      "metrics": {
+        "peakRmsDb": -33.1,
+        "baselineRmsDb": -60.2,
+        "frameDiff": 9.4,
+        "latencyMs": 910
+      },
+      "sensorVerdict": "pass",
+      "sensorReason": "peak -33.1 dB above -38 threshold",
+      "humanVerdict": "pass",
+      "agreement": true
+    },
+    {
+      "utteranceId": "g1-01",
+      "round": 5,
+      "startedAt": "2026-10-18T19:20:24+08:00",
+      "metrics": {
+        "peakRmsDb": -44.7,
+        "baselineRmsDb": -58.9,
+        "frameDiff": 3.2
+      },
+      "sensorVerdict": "inconclusive",
+      "sensorReason": "room noise rose to -44.7 dB, window below threshold",
+      "humanVerdict": "pass",
+      "humanNote": "did respond, but a chair scraped at the same moment",
+      "agreement": false
+    },
+    {
+      "utteranceId": "g1-02",
+      "round": 1,
+      "startedAt": "2026-10-18T19:20:31+08:00",
+      "metrics": {
+        "peakRmsDb": -35.8,
+        "baselineRmsDb": -61.1,
+        "frameDiff": 12.6,
+        "latencyMs": 1240
+      },
+      "sensorVerdict": "pass",
+      "sensorReason": "peak -35.8 dB above -38 threshold",
+      "humanVerdict": "pass",
+      "agreement": true
+    },
+    {
+      "utteranceId": "g1-02",
+      "round": 2,
+      "startedAt": "2026-10-18T19:20:37+08:00",
+      "metrics": {
+        "peakRmsDb": -39.6,
+        "baselineRmsDb": -61.0,
+        "frameDiff": 4.8
+      },
+      "sensorVerdict": "fail",
+      "sensorReason": "peak -39.6 dB below -38 threshold",
+      "humanVerdict": "fail",
+      "humanNote": "no reaction",
+      "agreement": true,
+      "recording": "g1-02-r2"
+    },
+    {
+      "utteranceId": "g1-02",
+      "round": 3,
+      "startedAt": "2026-10-18T19:20:42+08:00",
+      "metrics": {
+        "peakRmsDb": -34.2,
+        "baselineRmsDb": -60.8,
+        "frameDiff": 14.1,
+        "latencyMs": 1180
+      },
+      "sensorVerdict": "pass",
+      "sensorReason": "peak -34.2 dB above -38 threshold",
+      "humanVerdict": "pass",
+      "agreement": true
+    }
+  ],
+  "summary": {
+    "totalTrials": 8,
+    "passRate": 0.857,
+    "sensorHumanAgreement": 0.875,
+    "byGroup": {
+      "g1": {
+        "trials": 8,
+        "pass": 6,
+        "fail": 1,
+        "inconclusive": 1,
+        "passRate": 0.857
+      }
+    },
+    "byTag": {
+      "mora:mid": {
+        "trials": 8,
+        "pass": 6,
+        "fail": 1,
+        "passRate": 0.857
+      }
+    },
+    "byUtterance": {
+      "g1-01": {
+        "trials": 5,
+        "pass": 3,
+        "fail": 1,
+        "passRate": 0.75,
+        "medianLatencyMs": 820
+      },
+      "g1-02": {
+        "trials": 3,
+        "pass": 3,
+        "fail": 0,
+        "passRate": 1.0,
+        "medianLatencyMs": 1210
+      }
+    }
+  }
+}

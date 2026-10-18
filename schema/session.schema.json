@@ -1,0 +1,183 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saycheck.dev/schema/session.schema.json",
+  "title": "SayCheck Session Record",
+  "description": "One run of a suite. Stores per-trial sensor readings and verdicts. Never stores credentials, and by default never stores audio.",
+  "type": "object",
+  "required": ["schemaVersion", "suiteId", "sessionId", "trials"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "suiteId": {
+      "type": "string",
+      "description": "Must match suite.id."
+    },
+    "suiteHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 of the canonical suite JSON. Detects 'same id, different content' drift."
+    },
+    "sessionId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._:-]{6,80}$",
+      "description": "Usually an ISO-8601 timestamp. Must be unique per run."
+    },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "endedAt": { "type": "string", "format": "date-time" },
+    "operator": {
+      "type": "string",
+      "maxLength": 60,
+      "description": "Optional. Free-form, no accounts involved."
+    },
+    "device": {
+      "type": "object",
+      "description": "The measuring device (phone/laptop), not the robot.",
+      "additionalProperties": false,
+      "properties": {
+        "ua": { "type": "string", "maxLength": 400 },
+        "platform": { "type": "string", "maxLength": 80 },
+        "mic": { "type": "string", "maxLength": 120 },
+        "camera": { "type": "string", "maxLength": 120 },
+        "screen": { "type": "string", "maxLength": 40 }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "description": "Copied into every session. Without this, readings from different rooms are not comparable.",
+      "additionalProperties": false,
+      "properties": {
+        "rmsBaselineDb": { "type": "number", "maximum": 0 },
+        "rmsPeakDb": { "type": "number", "maximum": 0 },
+        "frameDiff": { "type": "number", "minimum": 0, "maximum": 255 },
+        "windowMs": { "type": "integer", "minimum": 100 },
+        "settleMs": { "type": "integer", "minimum": 0 },
+        "silenceMs": { "type": "integer", "minimum": 0 },
+        "rule": { "enum": ["any", "motion", "sound"] }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "description": "Optional ambient measurements, useful when a whole session fails.",
+      "additionalProperties": false,
+      "properties": {
+        "noiseFloorDb": { "type": "number", "maximum": 0 },
+        "lightLevel": { "type": "number", "minimum": 0, "maximum": 255 },
+        "note": { "type": "string", "maxLength": 300 }
+      }
+    },
+    "trials": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/trial" }
+    },
+    "summary": { "$ref": "#/definitions/summary" }
+  },
+  "definitions": {
+    "verdict": {
+      "enum": ["pass", "fail", "inconclusive", "skip"],
+      "description": "inconclusive means the sensor could not tell (too noisy, camera blocked). It is NOT a failure."
+    },
+    "trial": {
+      "type": "object",
+      "required": ["utteranceId", "round", "sensorVerdict"],
+      "additionalProperties": false,
+      "properties": {
+        "utteranceId": { "type": "string" },
+        "round": { "type": "integer", "minimum": 1 },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "peakRmsDb": { "type": "number", "maximum": 0 },
+            "baselineRmsDb": { "type": "number", "maximum": 0 },
+            "frameDiff": { "type": "number", "minimum": 0, "maximum": 255 },
+            "latencyMs": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Time from playback end to first detected response."
+            }
+          }
+        },
+        "sensorVerdict": { "$ref": "#/definitions/verdict" },
+        "sensorReason": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Human-readable explanation, e.g. 'peak -52 dB below -38 threshold'."
+        },
+        "humanVerdict": { "$ref": "#/definitions/verdict" },
+        "humanNote": { "type": "string", "maxLength": 300 },
+        "recording": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Key inside IndexedDB. Only present when the user opted into recording."
+        },
+        "agreement": {
+          "type": "boolean",
+          "description": "Whether sensorVerdict equals humanVerdict. Absent when no human verdict."
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "totalTrials": { "type": "integer", "minimum": 0 },
+        "passRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "passes / (passes + fails). Excludes inconclusive and skip."
+        },
+        "sensorHumanAgreement": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "How often the sensor matched the human. Below 0.8 means the thresholds need tuning."
+        },
+        "byGroup": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "trials": { "type": "integer" },
+              "pass": { "type": "integer" },
+              "fail": { "type": "integer" },
+              "inconclusive": { "type": "integer" },
+              "passRate": { "type": "number" }
+            }
+          }
+        },
+        "byTag": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "trials": { "type": "integer" },
+              "pass": { "type": "integer" },
+              "fail": { "type": "integer" },
+              "passRate": { "type": "number" }
+            }
+          },
+          "description": "Failure attribution: which linguistic features correlate with failures."
+        },
+        "byUtterance": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "trials": { "type": "integer" },
+              "pass": { "type": "integer" },
+              "fail": { "type": "integer" },
+              "passRate": { "type": "number" },
+              "medianLatencyMs": { "type": "integer" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://saycheck.dev/schema/suite.schema.json",
+  "title": "SayCheck Test Suite",
+  "description": "A set of utterances to play at a voice-enabled robot, grouped by scenario, with optional reference audio and expected behaviour.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "title", "locale", "utterances"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$",
+      "description": "Stable identifier. Used as the filename stem and as the foreign key in session records."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "locale": {
+      "type": "string",
+      "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+      "description": "BCP-47 language tag of the spoken text, e.g. ja-JP, en-US, zh-CN."
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX identifier for the suite content itself, e.g. MIT, CC-BY-4.0."
+    },
+    "robot": {
+      "type": "object",
+      "description": "Optional. Metadata only — SayCheck never connects to a device.",
+      "additionalProperties": false,
+      "properties": {
+        "vendor": { "type": "string", "maxLength": 60 },
+        "model": { "type": "string", "maxLength": 60 },
+        "firmware": { "type": "string", "maxLength": 60 },
+        "note": { "type": "string", "maxLength": 300 }
+      }
+    },
+    "audioBase": {
+      "type": "string",
+      "description": "Prefix prepended to every utterance audio.path. Relative to the suite file. Empty string means paths are absolute or relative to the page."
+    },
+    "groups": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-zA-Z0-9._-]{1,40}$" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 60 },
+          "scene": { "type": "string", "maxLength": 200 },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Optional. Higher weight contributes more to the overall score."
+          }
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "description": "Per-suite defaults. A runner may override any of these from the UI. The shipped values come from real measurements on a service robot, not from guesses.",
+      "additionalProperties": false,
+      "properties": {
+        "rounds": { "type": "integer", "minimum": 1, "maximum": 50, "default": 5 },
+        "gapMs": { "type": "integer", "minimum": 200, "maximum": 30000, "default": 1500 },
+        "windowMs": {
+          "type": "integer",
+          "minimum": 500,
+          "maximum": 30000,
+          "default": 5000,
+          "description": "How long to keep listening when nothing happens at all."
+        },
+        "settleMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5000,
+          "default": 900,
+          "description": "Quiet gap after playback ends before audio is judged. Stops the clip's own tail from counting as a response."
+        },
+        "silenceMs": {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 10000,
+          "default": 1000,
+          "description": "After a hit, finish early once this long passes with no further sound or motion."
+        },
+        "rmsPeakDb": {
+          "type": "number",
+          "maximum": 0,
+          "default": -34,
+          "description": "dBFS peak that counts as 'it spoke'. -34 dBFS is linear RMS 0.02."
+        },
+        "frameDiff": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 255,
+          "default": 3,
+          "description": "Mean frame difference that counts as 'it moved'. A still scene stays under 1; motion exceeds 3."
+        },
+        "rule": {
+          "enum": ["any", "motion", "sound"],
+          "default": "any",
+          "description": "any = sound OR motion counts as a response. motion = the robot must physically move. sound = it must make a sound."
+        },
+        "recordFailedOnly": { "type": "boolean", "default": true }
+      }
+    },
+    "utterances": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "items": { "$ref": "#/definitions/utterance" }
+    }
+  },
+  "definitions": {
+    "utterance": {
+      "type": "object",
+      "required": ["id", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9._-]{1,60}$",
+          "description": "Unique within the suite."
+        },
+        "groupId": {
+          "type": "string",
+          "description": "Must match a groups[].id. Omit for ungrouped utterances."
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "Exactly what should be spoken."
+        },
+        "translation": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Translation into the reviewer's language, so a non-speaker can judge correctness."
+        },
+        "romanization": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "audio": {
+          "type": "object",
+          "required": ["path"],
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Relative path to a wav/mp3/ogg file. Resolved against audioBase."
+            },
+            "provider": {
+              "type": "string",
+              "description": "Which TTS engine produced this clip: irodori, chatterbox, kokoro, human, ..."
+            },
+            "model": { "type": "string" },
+            "voice": { "type": "string" },
+            "languageId": {
+              "type": "string",
+              "description": "Language tag passed to the TTS engine when this clip was generated."
+            },
+            "durationMs": { "type": "integer", "minimum": 1 },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$",
+              "description": "Checksum of the audio file. Guards against silent re-generation invalidating historical comparisons."
+            }
+          }
+        },
+        "expect": {
+          "type": "object",
+          "description": "Human-readable expectation. Deliberately NOT used by the automatic sensor verdict.",
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "type": "string",
+              "maxLength": 60,
+              "description": "e.g. wave, handshake, nod, bow, none"
+            },
+            "reply": { "type": "string", "maxLength": 500 },
+            "maxLatencyMs": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "type": "string", "maxLength": 30 },
+          "description": "Free-form labels used for failure attribution, e.g. '5+ syllables', 'contains-number', 'keigo'."
+        },
+        "notes": { "type": "string", "maxLength": 500 }
+      }
+    }
+  }
+}

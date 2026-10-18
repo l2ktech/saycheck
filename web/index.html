@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SayCheck · 机器人语音调试台</title>
+<meta name="description" content="Zero-integration voice test harness for robots. Plays a phrase list, watches and listens, and gives you a pass-rate table.">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    SayCheck <small>机器人语音调试台</small>
+  </div>
+
+  <div class="spacer"></div>
+
+  <span class="pill" id="pill-suite">未加载套件</span>
+  <span class="pill" id="pill-sensors">传感器未就绪</span>
+  <span class="pill" id="pill-store">本地存储 —</span>
+
+  <button class="small ghost" id="btn-restart" hidden>重新开始</button>
+</header>
+
+<main>
+
+  <!-- ============================================================ SETUP -->
+  <section class="view active" id="view-setup">
+    <h1>把手机架在机器人前面，就能测它的语音。</h1>
+    <p class="lede">
+      不需要接 SDK、不改固件、不逆向协议。SayCheck 自动播放一组测试语句，
+      用麦克风听声音、用摄像头看动作，最后给你一张成功率排行。
+      判定用确定性的信号，不用 AI。
+    </p>
+
+    <div class="card">
+      <h2>1 · 测试套件</h2>
+      <div class="row" style="margin-bottom:12px">
+        <div class="grow">
+          <label class="field" for="suite-url">套件地址（相对路径或完整 URL）</label>
+          <input type="text" id="suite-url" value="../examples/saycheck-ja-45.suite.json" spellcheck="false">
+        </div>
+        <div style="align-self:flex-end">
+          <button id="btn-load-suite">加载</button>
+        </div>
+      </div>
+      <div class="row">
+        <button class="small ghost" id="btn-pick-file">从文件导入…</button>
+        <input type="file" id="file-input" accept=".json,application/json" hidden>
+        <span class="pill" id="suite-info">—</span>
+      </div>
+      <p class="lede" style="margin:12px 0 0;font-size:13px">
+        套件是一份 JSON（<code>schema/suite.schema.json</code>）。任何脚本生成的文件都能直接丢进来。
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>2 · 测试哪几组</h2>
+      <div id="group-chips" class="row" style="gap:0"></div>
+      <p class="lede" style="margin:10px 0 0;font-size:13px">
+        不选＝全部。全部 <b id="count-all">0</b> 条；当前选中 <b id="count-selected">0</b> 条。
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>3 · 参数</h2>
+      <div class="row">
+        <div>
+          <label class="field" for="opt-rounds">每条测几轮</label>
+          <input type="number" id="opt-rounds" min="1" max="50" value="5">
+        </div>
+        <div>
+          <label class="field" for="opt-gap">间隔 (ms)</label>
+          <input type="number" id="opt-gap" min="200" max="30000" step="100" value="1500">
+        </div>
+        <div>
+          <label class="field" for="opt-rule">判定规则</label>
+          <select id="opt-rule" style="width:auto">
+            <option value="any">声音或动作任一</option>
+            <option value="motion">必须有动作</option>
+            <option value="sound">必须有声音</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <div>
+          <label class="field" for="opt-window">没反应最多等 (ms)</label>
+          <input type="number" id="opt-window" min="500" max="30000" step="100" value="5000">
+        </div>
+        <div>
+          <label class="field" for="opt-settle">播完先静置 (ms)</label>
+          <input type="number" id="opt-settle" min="0" max="5000" step="50" value="900">
+        </div>
+        <div>
+          <label class="field" for="opt-silence">有反应后安静 (ms)</label>
+          <input type="number" id="opt-silence" min="200" max="10000" step="50" value="1000">
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <div>
+          <label class="field" for="opt-rms">声音阈值 (dBFS)</label>
+          <input type="number" id="opt-rms" min="-90" max="-5" step="1" value="-34">
+        </div>
+        <div>
+          <label class="field" for="opt-motion">动作阈值 (帧差)</label>
+          <input type="number" id="opt-motion" min="1" max="60" step="0.5" value="3">
+        </div>
+      </div>
+
+      <p class="lede" style="margin:12px 0 0;font-size:12.5px">
+        默认值来自真机实测：-34 dBFS 约等于线性 RMS 0.02，帧差 3 对应「静止 &lt;1、动起来 &gt;3」。
+        播完先静置是为了不把音频尾音当成机器人应答。
+      </p>
+
+      <div class="row" style="margin-top:12px">
+        <label class="field" style="display:flex;align-items:center;gap:8px;margin:0">
+          <input type="checkbox" id="opt-record" style="width:auto"> 录制失败样本（存本机 IndexedDB，默认关闭）
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>4 · 设备自检</h2>
+      <div class="row">
+        <button id="btn-check-devices">请求麦克风与摄像头</button>
+        <span class="pill" id="device-audio">麦克风 —</span>
+        <span class="pill" id="device-video">摄像头 —</span>
+      </div>
+      <div id="preview" style="max-width:340px;margin-top:12px"></div>
+      <div class="meters" style="margin-top:12px">
+        <div class="meter">
+          <div class="meter-label"><span>环境底噪（点击校准）</span><span id="cal-value">—</span></div>
+          <div class="bar"><i id="cal-bar"></i></div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="small" id="btn-calibrate">校准 1.5 秒</button>
+        <span class="pill" id="cal-hint">校准时请保持安静</span>
+      </div>
+      <p class="lede" style="margin:12px 0 0;font-size:13px">
+        摄像头被拒也能用，会退化成「只听声音」。两个都被拒也可以，退化成「纯人工判定」。
+      </p>
+    </div>
+
+    <div class="row">
+      <button class="primary" id="btn-start" style="font-size:16px;padding:14px 28px" disabled>开始测试</button>
+      <button class="ghost" id="btn-clear" hidden>清空本次记录</button>
+    </div>
+  </section>
+
+  <!-- ============================================================== RUN -->
+  <section class="view" id="view-run">
+
+    <div class="stage" id="stage">
+      <div class="stage-top">
+        <span id="run-progress">0 / 0</span>
+        <span id="run-group" class="pill">—</span>
+        <span class="stage-id" id="run-utt-id">—</span>
+      </div>
+
+      <div class="stage-text" id="run-text">准备中…</div>
+      <div class="stage-sub" id="run-sub"></div>
+
+      <div class="meters">
+        <div class="meter">
+          <div class="meter-label"><span>声音 RMS</span><span id="m-rms">—</span></div>
+          <div class="bar thresh"><i id="bar-rms"></i></div>
+        </div>
+        <div class="meter">
+          <div class="meter-label"><span>画面变化</span><span id="m-motion">—</span></div>
+          <div class="bar thresh"><i id="bar-motion" style="background:var(--blue)"></i></div>
+        </div>
+      </div>
+
+      <div class="verdicts" id="verdicts" hidden>
+        <button class="pass" id="btn-pass">○ 触发了<kbd>Y</kbd></button>
+        <button class="fail" id="btn-fail">× 没触发<kbd>N</kbd></button>
+        <button class="replay" id="btn-replay">↻ 重播<kbd>R</kbd></button>
+      </div>
+    </div>
+
+    <div class="row between" style="margin-bottom:10px">
+      <h2 style="margin:0">当前进度</h2>
+      <div class="row" style="gap:8px">
+        <button class="small ghost" id="btn-pause">暂停</button>
+        <button class="small ghost" id="btn-finish">结束并看结果</button>
+      </div>
+    </div>
+
+    <div class="items" id="run-items"></div>
+  </section>
+
+  <!-- ============================================================= RANK -->
+  <section class="view" id="view-rank">
+    <h1>结果</h1>
+    <p class="lede" id="rank-summary">还没有数据。</p>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="card" style="margin-top:16px">
+      <div class="row between" style="margin-bottom:12px">
+        <h2 style="margin:0">按组</h2>
+      </div>
+      <table id="table-groups">
+        <thead><tr><th>组</th><th class="num">样本</th><th class="num">成功</th><th class="num">失败</th><th class="num">不确定</th><th class="num">成功率</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="row between" style="margin-bottom:12px">
+        <h2 style="margin:0">逐条排行（差的在前）</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table id="table-utterances">
+          <thead><tr><th>#</th><th>语句</th><th>组</th><th class="num">样本</th><th class="num">成功</th><th class="num">失败</th><th class="num">成功率</th><th class="num">中位延迟</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>语言特征弱点</h2>
+      <p class="lede" style="margin:0 0 12px;font-size:13px">
+        按标签聚合，失败率高的排前面。这是「为什么失败」的线索。
+      </p>
+      <div id="tag-weakness"></div>
+    </div>
+
+    <div class="card">
+      <h2>导出</h2>
+      <div class="row">
+        <button class="primary" id="btn-export-session">导出测试记录 JSON</button>
+        <button id="btn-export-trials">逐轮明细 CSV</button>
+        <button id="btn-export-ranking">排行 CSV</button>
+      </div>
+      <p class="lede" style="margin:12px 0 0;font-size:13px">
+        数据只在你自己浏览器里。导出的 JSON 符合 <code>schema/session.schema.json</code>，
+        可以用 <code>scripts/validate.py</code> 校验。
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>SayCheck</span>
+  <span>·</span>
+  <span>无账号 · 无上传 · 录音只存本机</span>
+  <span>·</span>
+  <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+  <span class="spacer" style="flex:1"></span>
+  <span id="footer-hint">判定 = 麦克风 RMS + 摄像头帧差 + 人工一键</span>
+</footer>
+
+<div id="toast"></div>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
