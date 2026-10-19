@@ -232,7 +232,7 @@ button.danger:hover { background: #1e1010; }
 
 /* ------------------------------------------------------------------ podium */
 
-.podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.podium { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
 .podium:empty { display: none; }
 
 .podium-card {

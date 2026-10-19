@@ -192,6 +192,8 @@ on purpose — the map never ships.
 
 ## What it looks like
 
+![SayCheck demo](docs/screenshots/demo.gif)
+
 **Setup** — pick a suite, choose which groups to run, tune the thresholds.
 
 ![Setup](docs/screenshots/setup.png)

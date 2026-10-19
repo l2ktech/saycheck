@@ -148,6 +148,8 @@ python3 scripts/anonymize_suite.py \
 
 ## 长什么样
 
+![SayCheck 演示](docs/screenshots/demo.gif)
+
 **设置** —— 选套件、勾组、调阈值。
 
 ![设置页](docs/screenshots/setup.png)
