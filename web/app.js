@@ -410,7 +410,22 @@ function finish() {
   $("btn-stop").disabled = true;
   setPhase("idle", "完成", "全部跑完，看下面的排行");
   $("run-text").textContent = "跑完了";
+  if (app.state && app.state.trials.length) {
+    store.pushSnapshot(app.state.suiteId, snapshotFromState());
+  }
   renderAll();
+}
+
+/** Freeze this session's per-utterance rates so the next run can compare. */
+function snapshotFromState() {
+  const s = app.state;
+  const summary = stats.summarize(s.trials, app.suite.utterances);
+  const byUtterance = {};
+  for (const [id, b] of Object.entries(summary.byUtterance)) {
+    const decided = b.pass + b.fail;
+    byUtterance[id] = { pass: b.pass, fail: b.fail, rate: decided ? b.pass / decided : null };
+  }
+  return { sessionId: s.sessionId, at: new Date().toISOString(), byUtterance };
 }
 
 // ------------------------------------------------------------------ render
@@ -488,6 +503,10 @@ function renderTables() {
     return;
   }
 
+  // Compare against the previous finished run of this suite, if there is one.
+  const prev = app.state ? store.previousSnapshot(app.suite.id, app.state.sessionId) : null;
+  const prevBy = (prev && prev.byUtterance) || null;
+
   const frag = document.createDocumentFragment();
 
   groups.forEach((g, gi) => {
@@ -524,6 +543,7 @@ function renderTables() {
       <table>
         <thead><tr>
           <th>组内</th><th>唤醒词</th><th class="num">成功/轮</th><th class="num">成功率</th>
+          <th class="num" title="上一次跑完时的成功率与变化">上次</th>
           <th></th><th>各轮</th><th class="num">音 dB</th><th class="num">动</th>
           <th class="num">延迟</th><th></th>
         </tr></thead>
@@ -557,11 +577,19 @@ function renderTables() {
       const barCls = rateCls === "high" ? "" : rateCls === "mid" ? "mid" : rateCls === "low" ? "low" : "";
       const fill = s.rate === null ? 0 : Math.round(s.rate * 100);
 
+      const p = prevBy ? prevBy[u.id] : null;
+      const delta = p && p.rate !== null && s.rate !== null ? s.rate - p.rate : null;
+      const deltaPct = delta === null ? 0 : Math.round(delta * 100);
+      const deltaHtml = delta === null || Math.abs(deltaPct) < 1
+        ? ""
+        : `<span class="delta ${delta > 0 ? "up" : "down"}">${delta > 0 ? "▲" : "▼"}${Math.abs(deltaPct)}</span>`;
+
       tr.innerHTML = `
         <td class="rank">${rank}</td>
         <td class="text-cell"><div class="t" title="${esc(u.text)}">${esc(u.text)}</div><div class="zh">${esc(u.translation || "")}</div></td>
         <td class="num">${s.pass}/${s.pass + s.fail}</td>
         <td class="num"><span class="rate ${rateCls}">${pct(s.rate)}</span></td>
+        <td class="num"><span class="prev">${p ? pct(p.rate) : "—"}</span>${deltaHtml}</td>
         <td><span class="mini-progress ${barCls}"><i style="width:${fill}%"></i></span></td>
         <td><div class="rounds">${roundsHtml}</div></td>
         <td class="num"><span class="sig">${s.avgPeak === null ? "—" : `<b>${s.avgPeak.toFixed(0)}</b>`}</span></td>

@@ -72,6 +72,45 @@ export function usageKb() {
   return Math.round(bytes / 1024);
 }
 
+// ----------------------------------------------------------------- snapshots
+// A finished run is snapshotted so the next run can show "last time: 85% (+12)".
+// Kept local and small: one entry per session, five sessions deep. No server.
+
+const SNAP_PREFIX = `${PREFIX}snap:`;
+const SNAP_KEEP = 5;
+
+export function getSnapshots(suiteId) {
+  try {
+    const raw = localStorage.getItem(SNAP_PREFIX + suiteId);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Store (or replace) this session's snapshot, keeping the newest few. */
+export function pushSnapshot(suiteId, snapshot) {
+  const list = getSnapshots(suiteId).filter((s) => s.sessionId !== snapshot.sessionId);
+  list.unshift(snapshot);
+  try {
+    localStorage.setItem(SNAP_PREFIX + suiteId, JSON.stringify(list.slice(0, SNAP_KEEP)));
+    return true;
+  } catch (err) {
+    console.warn("pushSnapshot failed", err);
+    return false;
+  }
+}
+
+/** The most recent snapshot that is NOT the session currently on screen. */
+export function previousSnapshot(suiteId, currentSessionId) {
+  return getSnapshots(suiteId).find((s) => s.sessionId !== currentSessionId) || null;
+}
+
+export function clearSnapshots(suiteId) {
+  localStorage.removeItem(SNAP_PREFIX + suiteId);
+}
+
 // ------------------------------------------------------------------ recordings
 
 let dbPromise = null;

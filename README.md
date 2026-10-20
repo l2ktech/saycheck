@@ -209,6 +209,10 @@ correlate with failure.
 
 ![Results](docs/screenshots/results.png)
 
+**History** — every finished run is snapshotted locally (last 5 kept). The next
+run of the same suite shows the previous rate and the delta (`75% ▼8`) in a
+"last" column, so you do not have to copy numbers between sessions.
+
 ---
 
 ## Repo layout

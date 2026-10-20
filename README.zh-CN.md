@@ -163,6 +163,9 @@ python3 scripts/anonymize_suite.py \
 
 ![结果页](docs/screenshots/results.png)
 
+**历史对比**：每跑完一次，结果会自动存一份快照（最近 5 次）。下次跑同一套题库时，
+「上次」列会显示上一回的成功率和变化箭头（`75% ▼8`），不用手抄数字。
+
 ---
 
 ## 目录

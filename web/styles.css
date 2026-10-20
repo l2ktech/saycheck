@@ -380,3 +380,9 @@ footer .sep { opacity: 0.4; }
   background:var(--panel-2);white-space:nowrap;
 }
 .wake-switch input{accent-color:var(--accent)}
+
+/* 历史对比：上次成功率 + 变化箭头 */
+.prev { color: var(--dim); font-size: 11px; }
+.delta { margin-left: 4px; font-size: 10px; font-weight: 700; letter-spacing: -0.02em; }
+.delta.up { color: var(--accent); }
+.delta.down { color: var(--danger); }
