@@ -373,3 +373,10 @@ footer .sep { opacity: 0.4; }
   .group-stats { width: 100%; margin-left: 0; }
   footer { font-size: 10.5px; }
 }
+
+/* 唤醒开关：和普通输入框对齐高度，看起来像控制条里的一员 */
+.wake-switch{
+  padding:7px 10px;border:1px solid var(--line);border-radius:8px;
+  background:var(--panel-2);white-space:nowrap;
+}
+.wake-switch input{accent-color:var(--accent)}
