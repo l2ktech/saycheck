@@ -2,7 +2,7 @@
 // Everything lives on one screen: stage, controls, group filter, podium, tables.
 // Plain DOM, no framework, no build step.
 
-import { loadSuite, loadSuiteFromFile, audioUrl, selectUtterances, groupOf } from "./core/suite.js";
+import { loadSuite, loadSuiteFromFile, audioUrl, wakeUrl, selectUtterances, groupOf } from "./core/suite.js";
 import { Sensor, classify } from "./core/sensor.js";
 import { Player } from "./core/player.js";
 import * as stats from "./core/stats.js";
@@ -78,6 +78,8 @@ async function loadSuiteIntoApp(source) {
     renderAll();
 
     const urls = suite.utterances.map((u) => audioUrl(suite, u)).filter(Boolean);
+    const wu = wakeUrl(suite);
+    if (wu) urls.unshift(wu); // wake clip first: it repeats every round
     app.player.preload(urls.slice(0, 24), 4).then(() => {
       if (urls.length > 24) app.player.preload(urls.slice(24), 2);
     });
@@ -100,7 +102,16 @@ function applyDefaults(d) {
   $("opt-rms").value = d.rmsPeakDb;
   $("opt-motion").value = d.frameDiff;
   $("opt-rule").value = d.rule || "any";
+  $("opt-judge").value = d.judgeMode || "manual";
   $("opt-record").checked = !d.recordFailedOnly;
+
+  // The wake control only appears when the suite actually ships a wake clip.
+  const hasWake = !!(app.suite && app.suite.wake && app.suite.wake.audio);
+  $("wake-field").hidden = !hasWake;
+  $("opt-wake").checked = hasWake && d.useWake !== false;
+  if (hasWake && app.suite.wake.label) {
+    $("wake-label").textContent = `每轮先播「${app.suite.wake.label}」`;
+  }
 }
 
 // ------------------------------------------------------------------- device
@@ -162,6 +173,8 @@ function currentSettings() {
     rounds: clampInt($("opt-rounds").value, 1, 50),
     gapMs: clampInt($("opt-gap").value, 0, 30000),
     groups: [...app.activeGroups],
+    judgeMode: $("opt-judge").value,
+    useWake: !!$("opt-wake").checked,
     recordFailedOnly: !$("opt-record").checked,
   };
 }
@@ -267,10 +280,30 @@ async function step() {
 
   $("run-text").textContent = utt.text;
   $("run-utt-id").textContent = `${utt.id} · 第 ${round} 轮`;
-  setPhase("playing", "播放", group ? `${group.name} · ${utt.translation || ""}` : utt.translation || "");
   highlightRow(utt.id);
 
   const t = currentThresholds();
+  const judgeMode = $("opt-judge").value;
+  const sub = group ? `${group.name} · ${utt.translation || ""}` : utt.translation || "";
+
+  // The wake phrase goes first and stays OUTSIDE the measuring window: its own
+  // audio must never be mistaken for the robot's reply.
+  if (app.suite.wake && $("opt-wake").checked) {
+    const wu = wakeUrl(app.suite);
+    if (wu) {
+      const label = app.suite.wake.label ? `「${app.suite.wake.label}」` : "";
+      setPhase("playing", "唤醒", `先播唤醒音${label}…`);
+      try {
+        await app.player.play(wu);
+      } catch (err) {
+        toast(`唤醒音播放失败：${err.message}`, true);
+      }
+      await sleep(app.suite.wake.settleMs ?? 900);
+      if (!app.running) return;
+    }
+  }
+
+  setPhase("playing", "播放", sub);
   app.sensor.startWindow({
     windowMs: t.windowMs, settleMs: t.settleMs, silenceMs: t.silenceMs,
     rmsPeakDb: t.rmsPeakDb, frameDiff: t.frameDiff,
@@ -304,6 +337,17 @@ async function step() {
     ? { verdict: "skip", reason: `audio unavailable: ${playError}` }
     : classify(reading, { rule: t.rule, minMotion: t.frameDiff });
 
+  if (judgeMode === "auto") {
+    // Unattended batch: trust the sensor and keep going. An inconclusive reading
+    // becomes skip, so a noisy room never silently counts as a failure.
+    setPhase("sensing", "自动判定", describeAuto(auto, reading));
+    await sleep(450);
+    commitTrial(utt, round, reading, auto, startedAt,
+      auto.verdict === "inconclusive" ? "skip" : auto.verdict);
+    setTimeout(() => step(), clampInt($("opt-gap").value, 0, 30000));
+    return;
+  }
+
   app.awaiting = { utt, round, reading, auto, startedAt };
   setPhase("awaiting", "待判定", describeAuto(auto, reading));
   $("btn-pass").focus({ preventScroll: true });
@@ -318,10 +362,8 @@ function describeAuto(auto, reading) {
   return `${bits.join(" · ")} → ${tail}（以你的判断为准）`;
 }
 
-function onVerdict(human) {
-  if (!app.awaiting) return;
-  const { utt, round, reading, auto, startedAt } = app.awaiting;
-
+/** Append one trial, persist, and advance the cursor. Shared by manual and auto modes. */
+function commitTrial(utt, round, reading, auto, startedAt, human) {
   const trial = {
     utteranceId: utt.id,
     round,
@@ -340,13 +382,16 @@ function onVerdict(human) {
 
   app.state.trials.push(trial);
   persist();
-
-  app.awaiting = null;
   app.cursor += 1;
   renderAll();
+}
 
-  const gap = clampInt($("opt-gap").value, 0, 30000);
-  setTimeout(() => step(), gap);
+function onVerdict(human) {
+  if (!app.awaiting) return;
+  const { utt, round, reading, auto, startedAt } = app.awaiting;
+  app.awaiting = null;
+  commitTrial(utt, round, reading, auto, startedAt, human);
+  setTimeout(() => step(), clampInt($("opt-gap").value, 0, 30000));
 }
 
 async function replay() {

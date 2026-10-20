@@ -76,6 +76,13 @@
       </select>
     </div>
     <div class="field">
+      <label for="opt-judge">判定方式</label>
+      <select id="opt-judge" title="人工：每轮停下等你点 ○/×；自动：达标就算触发，直接往下跑">
+        <option value="manual">人工判定（我点 ○/×）</option>
+        <option value="auto">自动判定（达标就算）</option>
+      </select>
+    </div>
+    <div class="field">
       <label for="opt-rounds">每个词跑几次</label>
       <input type="number" id="opt-rounds" min="1" max="50" value="5">
     </div>
@@ -106,6 +113,10 @@
       <div class="field"><label for="opt-silence">有反应后安静 (ms)</label><input type="number" id="opt-silence" min="200" max="10000" step="50" value="1000"><span class="hint">安静这么久就提前结束</span></div>
       <div class="field"><label for="opt-rms">声音阈值 (dBFS)</label><input type="number" id="opt-rms" min="-90" max="-5" step="1" value="-34"><span class="hint">比环境底噪高 15–20 dB</span></div>
       <div class="field"><label for="opt-motion">动作阈值 (帧差)</label><input type="number" id="opt-motion" min="1" max="60" step="0.5" value="3"><span class="hint">静止 &lt;1，动起来 &gt;3</span></div>
+      <div class="field" id="wake-field" hidden>
+        <label for="opt-wake">唤醒词</label>
+        <label class="switch"><input type="checkbox" id="opt-wake" checked><span id="wake-label">每轮先播唤醒音</span></label>
+      </div>
       <div class="field"><label for="opt-record">录制失败样本</label><label class="switch"><input type="checkbox" id="opt-record"><span>存本机 IndexedDB</span></label></div>
       <div class="field" style="align-self:flex-end">
         <button id="btn-calibrate" class="small">校准环境底噪</button>

@@ -75,6 +75,7 @@ export function validateSuite(doc) {
     description: doc.description || "",
     locale: doc.locale || "",
     audioBase: doc.audioBase || "",
+    wake: doc.wake || null,
     groups,
     utterances: doc.utterances,
     defaults: Object.assign(
@@ -87,6 +88,8 @@ export function validateSuite(doc) {
         rmsPeakDb: -34,
         frameDiff: 3,
         rule: "any",
+        judgeMode: "manual",
+        useWake: true,
         recordFailedOnly: true,
       },
       doc.defaults || {}
@@ -98,6 +101,17 @@ export function validateSuite(doc) {
 export function audioUrl(suite, utterance) {
   if (!utterance.audio || !utterance.audio.path) return null;
   const path = (suite.audioBase || "") + utterance.audio.path;
+  try {
+    return new URL(path, suite._url).href;
+  } catch {
+    return null;
+  }
+}
+
+/** Absolute URL for the wake clip, or null when the suite has none. */
+export function wakeUrl(suite) {
+  if (!suite.wake || !suite.wake.audio) return null;
+  const path = (suite.audioBase || "") + suite.wake.audio;
   try {
     return new URL(path, suite._url).href;
   } catch {

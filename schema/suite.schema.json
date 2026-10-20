@@ -48,6 +48,31 @@
       "type": "string",
       "description": "Prefix prepended to every utterance audio.path. Relative to the suite file. Empty string means paths are absolute or relative to the page."
     },
+    "wake": {
+      "type": "object",
+      "description": "Optional wake phrase played before each test phrase. Most voice devices need one; leaving this out means the test phrase is spoken cold.",
+      "additionalProperties": false,
+      "required": ["audio"],
+      "properties": {
+        "audio": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Relative path to the wake clip. Resolved against audioBase."
+        },
+        "settleMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5000,
+          "default": 900,
+          "description": "Quiet gap after the wake clip before the test phrase starts."
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Shown in the UI, e.g. 'Hey robot'."
+        }
+      }
+    },
     "groups": {
       "type": "array",
       "maxItems": 50,
@@ -112,6 +137,16 @@
           "enum": ["any", "motion", "sound"],
           "default": "any",
           "description": "any = sound OR motion counts as a response. motion = the robot must physically move. sound = it must make a sound."
+        },
+        "judgeMode": {
+          "enum": ["manual", "auto"],
+          "default": "manual",
+          "description": "manual = stop after every round and wait for a keypress. auto = accept the sensor verdict and move on, for unattended batch runs."
+        },
+        "useWake": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the wake clip is played. Only meaningful when the suite defines `wake`."
         },
         "recordFailedOnly": { "type": "boolean", "default": true }
       }
