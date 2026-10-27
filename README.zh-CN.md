@@ -117,15 +117,25 @@ python3 -m http.server 8000
 ```
 
 打开 **http://localhost:8000/web/**，允许麦克风和摄像头，点「开始测试」。
-45 条、每条 5 轮，大约六分钟。
+默认题库是**三语对照的 36 句**（英语 / 马来语 / 中文，12 个意图各说一遍），
+每条 5 轮，大约五分钟；「套件」输入框点一下可以切到 45 条日语题库。
 
 **必须起本地服务**，不能直接双击 HTML：浏览器禁止 `file://` 下的 `fetch()`，
 而麦克风权限也要求安全上下文（`localhost` 算安全上下文）。
+
+三语题库的音频由 macOS `say` 合成（Samantha / Amira / Tingting），
+改文案或换音色后重新生成，脚本会同步更新 `sha256`：
+
+```bash
+python3 scripts/build_tri_suite.py
+python3 scripts/check_audio.py examples/saycheck-tri-36.suite.json
+```
 
 不开浏览器也能校验数据：
 
 ```bash
 python3 scripts/validate.py suite examples/saycheck-ja-45.suite.json
+python3 scripts/validate.py suite examples/saycheck-tri-36.suite.json
 python3 scripts/validate.py session examples/sample.session.json
 ```
 
@@ -173,7 +183,7 @@ python3 scripts/anonymize_suite.py \
 ```
 schema/     两个 JSON schema（真正的产品）
 scripts/    validate.py · anonymize_suite.py
-examples/   45 条脱敏日语语料 + 48kHz 音频 + 一份示例记录
+examples/   45 条脱敏日语语料 + 36 条三语语料 + 48kHz 音频 + 一份示例记录
 web/        浏览器运行器（v0.2）
 server/     可选的 OpenAI 兼容 TTS 代理（v0.3）
 docs/       设计说明

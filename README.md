@@ -160,7 +160,18 @@ python3 -m http.server 8000
 ```
 
 Open **http://localhost:8000/web/**, allow microphone and camera, press
-**开始测试**. Forty-five phrases, five rounds each — about six minutes.
+**开始测试**. The default suite is trilingual — 36 phrases covering the same 12
+intents in English, Malay and Chinese, five rounds each, about five minutes.
+Click the suite field to switch to the 45-phrase Japanese suite.
+
+The trilingual audio is synthesised with macOS `say` (Samantha / Amira /
+Tingting). Edit the phrase table or change a voice, then regenerate — the
+script rewrites the `sha256` for every clip:
+
+```bash
+python3 scripts/build_tri_suite.py
+python3 scripts/check_audio.py examples/saycheck-tri-36.suite.json
+```
 
 A local server is required, not optional: browsers refuse `fetch()` on
 `file://` URLs, and microphone access needs a secure context (`localhost`
@@ -220,7 +231,7 @@ run of the same suite shows the previous rate and the delta (`75% ▼8`) in a
 ```
 schema/     the two JSON schemas (the actual product)
 scripts/    validate.py · anonymize_suite.py
-examples/   45 anonymized Japanese utterances + 48 kHz audio + a sample session
+examples/   45 anonymized Japanese utterances + 36 trilingual utterances + 48 kHz audio + a sample session
 web/        browser runner (v0.2)
 server/     optional OpenAI-compatible TTS proxy (v0.3)
 docs/       design notes
